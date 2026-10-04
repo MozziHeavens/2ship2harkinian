@@ -38,10 +38,18 @@ jobs:
 
       - name: Build APK with Gradle
         working-directory: Android
-        run: ./gradlew assembleRelease || ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Dump CMake Logs on Failure
+        if: failure()
+        run: |
+          echo "==================== LOGS DE ERROR DE CMAKE ===================="
+          find Android/app/.cxx -name "build_model.json" -exec cat {} + 2>/dev/null || true
+          find Android/app/.cxx -name "*.log" -exec tail -n 100 {} + 2>/dev/null || true
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: 2Ship2Harkinian-Android-APK
           path: Android/app/build/outputs/apk/**/*.apk
