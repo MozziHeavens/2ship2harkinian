@@ -176,7 +176,11 @@ set(ALL_FILES
 ################################################################################
 # Target
 ################################################################################
-add_executable(${PROJECT_NAME} ${ALL_FILES})
+if(ANDROID)
+    add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
+else()
+    add_executable(${PROJECT_NAME} ${ALL_FILES})
+endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
